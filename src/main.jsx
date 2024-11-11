@@ -1,20 +1,22 @@
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import Login from './components/organisms/Login.jsx'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.jsx";
+import Login from "./components/organisms/Login.jsx";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import {
   createBrowserRouter,
   redirect,
   RouterProvider,
 } from "react-router-dom";
-import Register from './components/organisms/Register.jsx';
-import TodoForm from './components/organisms/TodoForm.jsx';
-import TodoList from './components/organisms/TodoList.jsx';
-import React from 'react';
-import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
-import NavBar from './components/molecules/navs/NavBar.jsx';
+import Register from "./components/organisms/Register.jsx";
+import TodoForm from "./components/organisms/TodoForm.jsx";
+import TodoList from "./components/organisms/TodoList.jsx";
+import React from "react";
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import NavBar from "./components/molecules/navs/NavBar.jsx";
+import Shop from "./components/organisms/Shop.jsx";
+import Cart from "./components/organisms/Cart.jsx";
 
 const isLoggedIn = () => {
   const userData = localStorage.getItem("users");
@@ -24,37 +26,88 @@ const isLoggedIn = () => {
 const router = createBrowserRouter([
   {
     path: "/",
-    element:<> <NavBar/><Register/> </>,
+    element: (
+      <>
+        {" "}
+        <NavBar />
+        <Register />{" "}
+      </>
+    ),
   },
   {
     path: "/login",
-    element:<> <NavBar/><Login/></>,
+    element: (
+      <>
+        {" "}
+        <NavBar />
+        <Login />
+      </>
+    ),
   },
   {
     path: "/todos",
-    element:<> <NavBar/><TodoForm/><TodoList/></>,
+    element: (
+      <>
+        {" "}
+        <NavBar />
+        <TodoForm />
+        <TodoList />
+      </>
+    ),
     loader: () => {
       if (!isLoggedIn()) {
-        alert('You are not logged in');
+        alert("You are not logged in");
         return redirect("/login");
       }
       return null;
-    }
+    },
   },
   {
     future: {
       v7_startTransition: true,
     },
-  }
+  },
+  {
+    path: "/shop",
+    element: (
+      <>
+        {" "}
+        <NavBar />
+        <Shop />
+      </>
+    ),
+    loader: () => {
+      if (!isLoggedIn()) {
+        alert("You are not logged in");
+        return redirect("/login");
+      }
+      return null;
+    },
+  },
+  {
+    path: "/cart",
+    element: (
+      <>
+        {" "}
+        <NavBar />
+        <Cart />
+      </>
+    ),
+    loader: () => {
+      if (!isLoggedIn()) {
+        alert("You are not logged in");
+        return redirect("/login");
+      }
+      return null;
+    },
+  },
 ]);
 
-
-
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ChakraProvider value={defaultSystem}>
-  <RouterProvider router={router} />
-  <App />
+      <RouterProvider router={router} />
+      <App />
     </ChakraProvider>
   </React.StrictMode>
-)
+);

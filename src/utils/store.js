@@ -1,16 +1,17 @@
 import { create } from "zustand";
-import { v4 as uuidv4 } from "uuid"; // Import the uuid v4 function
+import { v4 as uuidv4 } from "uuid";
 
 const useTodoStore = create((set) => ({
   todos: [],
   cart: [],
 
-  addTodo: (todo) =>
+  // Todos Functions
+  addTodo: (todoText) =>
     set((state) => ({
       todos: [
         ...state.todos,
         {
-          text: todo,
+          text: todoText,
           id: uuidv4(),
           completed: false,
         },
@@ -29,25 +30,36 @@ const useTodoStore = create((set) => ({
       ),
     })),
 
-  addToCart: (item) =>
-    set((state) => ({
-      cart: [
-        ...state.cart,
-        {
-          ...item,
-          id: item.id || uuidv4(),
-        },
-      ],
-    })),
+  // Cart Functions
+  editCartItem: (id, updatedProperties = {}) =>
+    set((state) => {
+      const existingItem = state.cart.find((item) => item.id === id);
+
+      if (existingItem) {
+        // Update item if it exists in the cart
+        return {
+          cart: state.cart.map((item) =>
+            item.id === id ? { ...item, ...updatedProperties } : item
+          ),
+        };
+      } else {
+        // Add new item if it doesn't exist in the cart
+        return {
+          cart: [
+            ...state.cart,
+            {
+              id,
+              ...updatedProperties,
+              quantity: updatedProperties.quantity || 1, // Default quantity to 1 if not provided
+            },
+          ],
+        };
+      }
+    }),
+
   removeFromCart: (id) =>
     set((state) => ({
       cart: state.cart.filter((item) => item.id !== id),
-    })),
-  editCartItem: (id, updatedProperties) =>
-    set((state) => ({
-      cart: state.cart.map((item) =>
-        item.id === id ? { ...item, ...updatedProperties } : item
-      ),
     })),
 }));
 
